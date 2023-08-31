@@ -1,3 +1,6 @@
+const { onUpdateTrigger } = require("../../../knexfile");
+
+
 exports.up = function (knex) {
   return knex.schema.createTable("users", function (table) {
     table.increments("id")
@@ -7,7 +10,7 @@ exports.up = function (knex) {
     table.timestamp("updated_at").defaultTo(knex.fn.now())
 
 
-  });
+  }).then(() => knex.raw(onUpdateTrigger("users")));
 };
 
 exports.down = function (knex) {

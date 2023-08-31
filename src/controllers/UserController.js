@@ -2,7 +2,7 @@ const knex = require("../database");
 
 module.exports = {
   async index(req, res) {
-    const results = await knex("users");
+    const results = await knex("users").where("deleted_at", null)
 
     return res.status(200).json(results);
   },
@@ -54,7 +54,10 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      await knex("users").delete().where({ id });
+      await knex("users")
+      .where({ id })
+      .update("deleted_at", new Date.now())
+      ;
 
       return res.send("Usuario excluido com sucesso");
     } catch (error) {
